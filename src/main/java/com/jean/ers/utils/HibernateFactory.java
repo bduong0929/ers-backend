@@ -1,5 +1,6 @@
 package com.jean.ers.utils;
 
+import org.hibernate.SessionException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
@@ -18,6 +19,8 @@ public class HibernateFactory {
     public SessionFactory getSessionFactory() {
         Configuration cfg = new Configuration();
         cfg.configure();
-        return cfg.buildSessionFactory();
+        SessionFactory sf = cfg.buildSessionFactory();
+        if (sf == null) throw new SessionException("Unable to create Session Factory");
+        return sf;
     }
 }

@@ -2,15 +2,15 @@
 <hibernate-configuration xmlns="http://www.hibernate.org/xsd/orm/cfg">
     <session-factory>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="hibernate.connection.driver_class">org.postgresql.jdbc.Driver</property>
-        
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
         <property name="hibernate.connection.url">jdbc:postgresql://db-yolp.cnjh1ht2lxbr.us-east-1.rds.amazonaws.com:5432/postgres?currentSchema=ers</property>
         <property name="hibernate.connection.username">postgres</property>
         <property name="hibernate.connection.password">revature</property>
 
         <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
+        <mapping class="com.jean.ers.models.Role" />
         <mapping class="com.jean.ers.models.User" />
     </session-factory>
 </hibernate-configuration>

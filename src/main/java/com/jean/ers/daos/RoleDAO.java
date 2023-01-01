@@ -1,6 +1,6 @@
 package com.jean.ers.daos;
 
-import com.jean.ers.models.User;
+import com.jean.ers.models.Role;
 import com.jean.ers.utils.HibernateFactory;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.hibernate.Session;
@@ -9,20 +9,12 @@ import org.hibernate.SessionFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class UserDAO implements CrudDAO<User> {
+public class RoleDAO implements CrudDAO<Role> {
     @Override
-    public void save(User obj) {
-        try (SessionFactory sf = HibernateFactory.getInstance().getSessionFactory()) {
-            Session s = sf.openSession();
-            s.beginTransaction();
-            s.persist(obj);
-            s.getTransaction().commit();
-        } catch (SessionException e) {
-            e.printStackTrace();
-        }
+    public void save(Role obj) {
+
     }
 
     @Override
@@ -36,27 +28,28 @@ public class UserDAO implements CrudDAO<User> {
     }
 
     @Override
-    public User findById(String id) {
+    public Role findById(String id) {
         return null;
     }
 
     @Override
-    public List<User> findAllById(String id) {
+    public List<Role> findAllById(String id) {
         return null;
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> users = new ArrayList<>();
+    public List<Role> findAll() {
+        List<Role> roles = new ArrayList<>();
 
         try (SessionFactory sf = HibernateFactory.getInstance().getSessionFactory()) {
             Session s = sf.openSession();
             s.beginTransaction();
-            users = s.createQuery("SELECT u from User u", User.class).stream().collect(Collectors.toList());
+            roles = s.createQuery("SELECT r FROM Role r", Role.class).stream().toList();
             s.getTransaction().commit();
         } catch (SessionException e) {
             e.printStackTrace();
         }
-        return users;
+
+        return roles;
     }
 }
