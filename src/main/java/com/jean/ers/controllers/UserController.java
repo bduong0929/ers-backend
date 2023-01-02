@@ -3,12 +3,12 @@ package com.jean.ers.controllers;
 import com.jean.ers.dtos.requests.LoginRequest;
 import com.jean.ers.dtos.requests.RegisterRequest;
 import com.jean.ers.dtos.responses.Principal;
+import com.jean.ers.dtos.responses.UserListResponse;
 import com.jean.ers.models.User;
 import com.jean.ers.services.TokenService;
 import com.jean.ers.services.UserService;
 import com.jean.ers.utils.custom_exceptions.RegisterException;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -22,11 +22,7 @@ public class UserController {
     @Inject
     private UserService userService;
 
-    @Inject
-    private TokenService tokenService;
-
     @POST
-    @Path("/signup")
     @Produces(MediaType.APPLICATION_JSON)
     public User registerNewUser(RegisterRequest req) {
         User user;
@@ -46,20 +42,9 @@ public class UserController {
         return user;
     }
 
-    @POST
-    @Path("/login")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Principal loginUser(LoginRequest req) {
-        Principal principal = userService.login(req);
-        String token = tokenService.generateToken(principal);
-        principal.setToken(token);
-        return principal;
-    }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAllUsers() {
+    public List<UserListResponse> getAllUsers() {
         return userService.findAllUsers();
     }
-
 }

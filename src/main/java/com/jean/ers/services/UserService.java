@@ -5,6 +5,7 @@ import com.jean.ers.daos.UserDAO;
 import com.jean.ers.dtos.requests.LoginRequest;
 import com.jean.ers.dtos.requests.RegisterRequest;
 import com.jean.ers.dtos.responses.Principal;
+import com.jean.ers.dtos.responses.UserListResponse;
 import com.jean.ers.models.Role;
 import com.jean.ers.models.User;
 import com.jean.ers.utils.custom_exceptions.LoginException;
@@ -14,6 +15,7 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Transactional
 @ApplicationScoped
@@ -44,11 +46,11 @@ public class UserService {
                 .orElse(null);
 
         if (foundUser == null) throw new LoginException("Incorrect username or password");
-        return new Principal(foundUser.getId(), foundUser.getUsername(), foundUser.getEmail(), foundUser.getGivenName(), foundUser.getSurname(), foundUser.getRole().getId());
+        return new Principal(foundUser.getId(), foundUser.getUsername(), foundUser.getEmail(), foundUser.getGivenName(), foundUser.getSurname(), foundUser.getRole().getRole());
     }
 
-    public List<User> findAllUsers() {
-        return userDAO.findAll();
+    public List<UserListResponse> findAllUsers() {
+        return userDAO.findAll().stream().map(UserListResponse::new).collect(Collectors.toList());
     }
 
     public boolean isValidUsername(String username) {
@@ -56,12 +58,7 @@ public class UserService {
     }
 
     public boolean isUniqueUsername(String username) {
-        List<User> users = userDAO.findAll()
-                .stream()
-                .filter(u -> u.getUsername().equals(username))
-                .toList();
-
-        return users.size() == 0;
+        return userDAO.findAll().stream().noneMatch(u -> u.getUsername().equals(username));
     }
 
     public boolean isValidEmail(String email) {
@@ -69,12 +66,7 @@ public class UserService {
     }
 
     public boolean isUniqueEmail(String email) {
-        List<User> users = userDAO.findAll()
-                .stream()
-                .filter(u -> u.getEmail().equals(email))
-                .toList();
-
-        return users.size() == 0;
+        return userDAO.findAll().stream().noneMatch(u -> u.getEmail().equals(email));
     }
 
     public boolean isValidPassword(String password) {
